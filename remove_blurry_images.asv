@@ -1,9 +1,7 @@
 function remove_blurry_images
 %analyses images to determine if the images are blurry. To see if an image
 %is blurry, a variance value is calculated for each image. Then if this
-%variance value is above a threshold it is not blurry and if it is below it
-%is blurry. Doesn't work perfectly, but the sensitivity can be modified by
-%changing the threshold. 
+%variance value is above a threshold it is not
 
     close('all')
 

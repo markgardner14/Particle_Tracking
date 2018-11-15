@@ -2,7 +2,7 @@ function S8_Particle_Tracking_2018
 
 % Function to manually track movement of particles between adjacent
 % frames. The time intervals between adjancet frames can be variable and
-% not fixed. The file 'generate_time_values.m' will extract the time values from the images which are used in this function.  
+% not fixed. The file 'generate_time_values.m' will extract the time values that  
 %
 % NOTE 1: Track only particles that are moving. Stationary particles should
 % be excluded.

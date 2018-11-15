@@ -324,13 +324,10 @@ function track_testing_2017_3
                 pts_diff(ind_n2) = sqrt((pts_all(goods_new(ind_n2),1,n)-pts_all(goods(ind_n1),1,n-1)).^2 + (pts_all(goods_new(ind_n2),2,n)-pts_all(goods(ind_n1),2,n-1)).^2);
                 pts_diff = pts_diff*1.5;
                 
-                %Measure the difference in particle locations between
-                %current and previous frame
+                %Meausre the difference betw
                 pts_diff2 = zeros(numel(goods_new),2);
                 pts_diff2(ind_n2,:) = [(pts_all(goods_new(ind_n2),1,n)-pts_all(goods(ind_n1),1,n-1)) (pts_all(goods_new(ind_n2),2,n)-pts_all(goods(ind_n1),2,n-1))];
                 
-                %Median difference is calculated to account for the frame
-                %moving or general drift of particles and such
                 pts_diff2(ind_n2,:) = pts_diff2(ind_n2,:) - median(pts_diff2(ind_n2,:));
                 
                 %Gap closing
@@ -398,8 +395,7 @@ function track_testing_2017_3
             end
 
 
-            %Save image containing particle paths. Image is saved as both a
-            %jpg file and a frame as part of the video.
+
             if n < 10
                 f = strcat('00',num2str(n));
             elseif n < 100
