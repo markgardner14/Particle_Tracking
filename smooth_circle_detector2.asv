@@ -1,17 +1,12 @@
 function[centers,radii] = smooth_circle_detector2(im,ax,rmin,rmax,sensitivity)
 %Algorithm for detecting particles using gaussian smoothing and a Circular
 %Hough Transform
-%Input
 %im - image file
 %ax - axis for plotting results
 %rmin - minimum radius of particle
 %rmax - maximum radius of particle
-%sensitivity - scalar value between 0 and 1 that governs how sensitive the
-%CHT circle detector is
-%Outputs
-%centers - vector containing x and y co-ordinates of center points of
-%circles detected
-%radii - radii of detected circles
+
+    
     r = rmin + (rmax - rmin)/2;     %Calculate average particle size
 
     sig1 = 1/(1+sqrt(2))*r;         %Sigma values for gaussian smoothies. I can't remember where I got these forumlas from but it works so...

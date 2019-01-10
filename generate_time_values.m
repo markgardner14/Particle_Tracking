@@ -1,4 +1,7 @@
 function generate_time_values
+%Extract time values from images and save them in a dataset that is
+%accessed by the file S8_Particle_Tracking_2018.m
+
 
     base = 'I:/SPring-8/2017 A/Images/FD Corrected/';
 
