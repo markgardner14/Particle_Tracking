@@ -108,15 +108,19 @@ else
     
     inds = zeros(1,numel(expt.tracking(tracked).runlist));
     
-    try
-        load(expt.file.time_file,'times')
-    catch
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %load('exp_list/S8_18A_XU_times','times')                %Location of data file of times for different images. Change as appropriate
-        %load('exp_list/S8_17B_XU_times','times')  
-        load('exp_list/S8_17A_XU_times','times')  
-        %load([pathname,filename(1:end-2),'_times'],'times')
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    if exist(expt.tracking(tracked).time_file,'file') > 0
+        load(expt.tracking(tracked).time_file,'times')
+    else
+        try
+            load(expt.file.time_file,'times')
+        catch
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %load('exp_list/S8_18A_XU_times','times')                %Location of data file of times for different images. Change as appropriate
+            %load('exp_list/S8_17B_XU_times','times')  
+            load('exp_list/S8_17A_XU_times','times')  
+            %load([pathname,filename(1:end-2),'_times'],'times')
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        end
     end
     try
         times(1).ind;
@@ -147,14 +151,15 @@ while m <= length(expt.tracking(tracked).runlist)
 %     catch
 %         
 %     end
-        
-    if inds(m) == 0
-       m = m+1;
-       continue
-    end
 
         
     if ~fixed_Fs
+        
+        if inds(m) == 0
+           m = m+1;
+           continue
+        end        
+        
         end_times =  start_times + expt.tracking(tracked).frames*median(diff(times(expt.rand_order(m)).t0));
     end
     
@@ -169,8 +174,11 @@ while m <= length(expt.tracking(tracked).runlist)
                 continue
             end            
             
-            frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
-            
+            try
+                frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+            catch
+               disp('Error') 
+            end
             f = numel(frames);
             if f == 0
                 t = t+1;
@@ -206,7 +214,10 @@ while m <= length(expt.tracking(tracked).runlist)
             if exist(imagename),
                 %disp(['Loading image ', num2str(i), ' of ', num2str(expt.tracking(tracked).frames)]);
                 disp(['Loading image ', num2str(i), ' of ', num2str(f)]);
-                [images(:,:,i),acquired(i)] = ReadFileTime(imagename);
+                %[images(:,:,i),acquired(i)] = ReadFileTime(imagename);
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%uncomment above%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%line%%%%%%%%%%%%%%%%%%%%
+                [images(:,:,i)] = ReadFileTime(imagename);
+                acquired(i) = framenumber(i)*expt.tracking(1).frameinterval;
             else
                 images(:,:,i) = uint8(zeros(expt.tracking(tracked).imsize));
             end

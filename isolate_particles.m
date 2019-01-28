@@ -2,7 +2,7 @@ function isolate_particles
 
     close('all')
 
-    folder = 'C:\Users\mark\Desktop\important things\CF_Airway_stuff\Particles2\';
+    folder = 'I:\SPring-8\2018 B\Images\Raw\2018.12.16_martin\Particles2\';
 
     %Flat field correction
 
@@ -50,29 +50,48 @@ function isolate_particles
         
         imA1 = imread([folder,'Beads_A1_',num,'.tif']);
         imA2 = imread([folder,'Beads_A2_',num,'.tif']);
-        
+        imB = imread([folder,'Beads_B',num,'.tif']);
+        imC = imread([folder,'Beads_C',num,'.tif']);
+        imD = imread([folder,'Beads_D1_',num,'.tif']);
+   
         beadsA1(:,:,i) = (double(imA1)./double(flat1))*mean_flat1;
         beadsA2(:,:,i) = (double(imA2)./double(flat1))*mean_flat1;
-        %beadsB(:,:,i) = imread([flat_str2,num,'.tif']);    
-        %beadsC(:,:,i) = imread([flat_str2,num,'.tif']); 
-        %beadsD(:,:,i) = imread([flat_str2,num,'.tif']); 
+        beadsB(:,:,i) = (double(imB)./double(flat1))*mean_flat1;    
+        beadsC(:,:,i) = (double(imC)./double(flat1))*mean_flat1;
+        beadsD(:,:,i) = (double(imD)./double(flat2))*mean_flat2; 
     end
     
     beadsA1_im = uint16(mean(beadsA1,3));
-    imshow(imadjust(beadsA1_im));
+    imshow(beadsA1_im,[]);
     
     %get_particles(beadsA1_im,folder,'BeadA1_eg_')
     
     beadsA2_im = uint16(mean(beadsA2,3));
-    imshow(imadjust(beadsA2_im));
+    imshow(beadsA2_im,[]);
     
-    get_particles(beadsA2_im,folder,'BeadA2_eg_')
+    %get_particles(beadsA2_im,folder,'BeadA2_eg_')
+    %get_particles(beadsA2_im,folder,'BeadA2_eg_')
+    
+    beadsB_im = uint16(mean(beadsB,3));
+    imshow(beadsB_im,[]);
+    
+    beadsC_im = uint16(mean(beadsC,3));
+    imshow(beadsC_im,[]);
+    
+    beadsD_im = uint16(mean(beadsD,3));
+    imshow(beadsD_im,[]);    
+    
+    get_particles(beadsB_im,folder,'BeadB_eg_')
+    get_particles(beadsC_im,folder,'BeadC_eg_')
+    get_particles(beadsD_im,folder,'BeadD_eg_')
+    
 end
 
 function get_particles(im,folder,str)
 
     for i = 1:4
-       [J,rect] = imcrop(imadjust(im));
+        h = imshow(im,[]);
+       [J,rect] = imcrop(h);
        figure()
        imshow(J)
        [J] = imcrop(im,rect);
