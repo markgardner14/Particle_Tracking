@@ -5,3 +5,5 @@ track_testing_2017_3.asv
 smooth_circle_detector2.asv
 *.asv
 generate_time_values.m
+generate_time_values.m
+*.m
