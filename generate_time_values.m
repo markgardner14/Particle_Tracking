@@ -3,9 +3,9 @@ function generate_time_values
 %accessed by the file S8_Particle_Tracking_2018.m
 
 
-    base = 'I:/SPring-8/2017 A/Images/FD Corrected/';
+    base = 'I:/SPring-8/2018 B/Images/FD Corrected/';
 
-    exp_name = 'S8_17A_XU';
+    exp_name = 'S8_18B_XU';
     
     %run('exp_list/S8_17A_XU.m')
     run(['exp_list/', exp_name,'.m'])
