@@ -104,7 +104,8 @@ def main(exp_str,tracked):
     #print(file_num)
     try:
         #Do the thing 
-        for i in range(0,len(file_num)):
+        #for i in range(0,len(file_num)):
+        for i in range(1,len(file_num)):
             file = base + file_str1[i] + 'Low/' + file_str2[i] + 'fad_'
             
             kurts = []
@@ -144,6 +145,7 @@ def main(exp_str,tracked):
             ROI_width = [];
             ROI_height = [];
             
+            max_pts_num = 0;
             
             #load particle locations
             with open(save_location + file_str2[i] + 'locations.txt') as f:
@@ -154,8 +156,9 @@ def main(exp_str,tracked):
                         frames.append(int(s[0]))
                         x_ROI.append(float(s[1]))
                         y_ROI.append(float(s[2]))
-                        ROI_width.append(float(s[3]))
-                        ROI_height.append(float(s[4]))
+                        if len(s) > 3:
+                            ROI_width.append(float(s[3]))
+                            ROI_height.append(float(s[4]))
                         
                 #print(frames)
                 #print(x_ROI)
@@ -183,12 +186,15 @@ def main(exp_str,tracked):
     #                y_temp.append(y_ROI[f_temp[k]])
     #                w_temp.append(ROI_width[f_temp[k]])
     #                h_temp.append(ROI_height[f_temp[k]])
-                    resume.rectangle(im,(int(x_ROI[f_temp[k]]),int(y_ROI[f_temp[k]])),(int(x_ROI[f_temp[k]] + ROI_width[f_temp[k]]),int(y_ROI[f_temp[k]] + ROI_height[f_temp[k]])),(0,255,0),2)
-                    [im2,shift] = get_mini_image2(x_ROI[f_temp[k]],y_ROI[f_temp[k]],ROI_height[f_temp[k]],ROI_width[f_temp[k]],im)
-                    [x,y,r] = detect_circle_centre2(im2,shift,150)
-                    centres.append([x,y])
+                    if len(ROI_width)  < 1:
+                        centres.append([int(x_ROI[f_temp[k]]),int(y_ROI[f_temp[k]])])
+                    else:
+                        resume.rectangle(im,(int(x_ROI[f_temp[k]]),int(y_ROI[f_temp[k]])),(int(x_ROI[f_temp[k]] + ROI_width[f_temp[k]]),int(y_ROI[f_temp[k]] + ROI_height[f_temp[k]])),(0,255,0),2)
+                        [im2,shift] = get_mini_image2(x_ROI[f_temp[k]],y_ROI[f_temp[k]],ROI_height[f_temp[k]],ROI_width[f_temp[k]],im)
+                        [x,y,r] = detect_circle_centre2(im2,shift,150)
+                        centres.append([x,y])
                     
-                if len(centres) > 0:
+                if len(centres) > 0 and len(ROI_width)  < 1:
                     centres = delete_duplicate_points(centres,dist_th)
                     
                 for k in range(0,len(centres)):
@@ -259,50 +265,64 @@ def main(exp_str,tracked):
                     resume.waitKey(1)                 
                     points_all.append(pts_new)    
                     if j > 0:
-                        if max(0,j-10) >= 1:
-                            print("butts")
-                        for k in range(0,len(pts_new)):
-                            pts_plot = [];
-                            negs = [];
-                            for m in range(max(0,j-10),j+1):
-                                if k < len(points_all[m]):
-                                    if points_all[m][k][0] > 0:
-                                        pts_plot.append(points_all[m][k])
-                                    elif points_all[m][k][0] == -1:
-                                        pts_plot.append(points_all[m][k])
-                                        negs.append(m)
-
-                            if len(negs) > 0:
-                                for m in range(0,len(negs)+1):
-                                    if m == 0:
-                                        pts_plot2 = pts_plot[0:negs[m]]
-                                    elif m == len(negs):
-                                        pts_plot2 = pts_plot[negs[m-1]+1:]
-                                    else:
-                                        pts_plot2 = pts_plot[negs[m-1]+1:negs[m]]
-                                    if (j > 2 and len(pts_plot2) > 3) or (j <=2 and len(pts_plot2) > 1):
-                                        for o in range(0,len(pts_plot2)-1):
-                                            if pts_plot2[o][0] > 0 and pts_plot2[o+1][0] > 0:
-                                                resume.line(im_path,(int(pts_plot2[o][0]),int(pts_plot2[o][1])),
-                                                            (int(pts_plot2[o+1][0]),int(pts_plot2[o+1][1])),(255,255,255),2)
-                            else:                               
-                                for m in range(0,len(pts_plot)-1):
-                                    resume.line(im_path,(int(pts_plot[m][0]),int(pts_plot[m][1])),(int(pts_plot[m+1][0]),int(pts_plot[m+1][1])),
-                                        (255,255,255),2)
-                        resume.imshow('Path',im_path)    
-                        resume.waitKey(1)                         
+                        pass
+#                        if max(0,j-10) >= 1:
+#                            print("butts")
+#                        for k in range(0,len(pts_new)):
+#                            pts_plot = [];
+#                            negs = [];
+#                            for m in range(max(0,j-10),j+1):
+#                                if k < len(points_all[m]):
+#                                    if points_all[m][k][0] > 0:
+#                                        pts_plot.append(points_all[m][k])
+#                                    elif points_all[m][k][0] == -1:
+#                                        pts_plot.append(points_all[m][k])
+#                                        negs.append(m)
+#
+#                            if len(negs) > 0:
+#                                for m in range(0,len(negs)+1):
+#                                    if m == 0:
+#                                        pts_plot2 = pts_plot[0:negs[m]]
+#                                    elif m == len(negs):
+#                                        pts_plot2 = pts_plot[negs[m-1]+1:]
+#                                    else:
+#                                        pts_plot2 = pts_plot[negs[m-1]+1:negs[m]]
+#                                    if (j > 2 and len(pts_plot2) > 3) or (j <=2 and len(pts_plot2) > 1):
+#                                        for o in range(0,len(pts_plot2)-1):
+#                                            if pts_plot2[o][0] > 0 and pts_plot2[o+1][0] > 0:
+#                                                resume.line(im_path,(int(pts_plot2[o][0]),int(pts_plot2[o][1])),
+#                                                            (int(pts_plot2[o+1][0]),int(pts_plot2[o+1][1])),(255,255,255),2)
+#                            else:                               
+#                                for m in range(0,len(pts_plot)-1):
+#                                    resume.line(im_path,(int(pts_plot[m][0]),int(pts_plot[m][1])),(int(pts_plot[m+1][0]),int(pts_plot[m+1][1])),
+#                                        (255,255,255),2)
+#                        resume.imshow('Path',im_path)    
+#                        resume.waitKey(1)                         
                 #centres_last = points_all[j]
                 centres_last = [];
                 for k in range(0,len(points_all[j])):
                     if points_all[j][k][0] > 0:
                         centres_last.append(points_all[j][k])
-                
+                if len(points_all[j]) > max_pts_num:
+                    max_pts_num = len(points_all[j])
                 last = j
-        print('File Completed')
+            print('File Completed')
+            save_file = save_location + file_str2[i] + "paths.xlsx"
+            
+            wb2 = Workbook()
+            ws2 = wb2.create_sheet('Particle_locations')
+            
+            for c in range(0,max_pts_num):
+                for r in range(0,file_num[i]): 
+                    if len(points_all[r]) > c:
+                        ws2.cell(column=c+1, row=r+1,value = "{0},{1}".format(str(points_all[r][c][0]),str(points_all[r][c][1])))
+                    
+            
+            wb2.save(save_file)
         
     except:
         print('Something Fucked up')
         resume.destroyAllWindows()
         
-main('18A',tracked = 2)
+main('18B',tracked = 1)
     

@@ -76,8 +76,8 @@ def detect_circle_centre2(im,shift,th):
         rads = rads2[ind]
 
     except:
-        x = round(s1/2.0)+ shift[0];
-        y = round(s2/2.0)+ shift[1];
+        x = round(s1/2.0) + shift[0];
+        y = round(s2/2.0) + shift[1];
         rads = 20.0;
     return x,y,rads
 
@@ -88,41 +88,35 @@ def get_mini_image2(x,y,H,W,im):
     if x < 0:
         #x_arr = 1:x+r2;
         #x_arr = nompie.arange(x+r);
-        x_low = 0;
         x_high = x+W-1;
         shift_x = 0;
     elif x+W >= s1:
         #x_arr = x-r2:s;
         #x_arr = nompie.arange(x-r-1.,s1);
-        x_low = x-1;
         x_high = -1;
-        shift_x = x;
+        shift_x = x-W-1;
     else:
         #x_arr = x-r2:x+r2;
-        x_low = x-1;
         x_high = x+W;
-        shift_x = x;
+        shift_x = x-W-1;
 
     if y < 0:
         #y_arr = 1:y+r2;
         #y_arr = nompie.arange(y+r)
-        y_low = 1;
         y_high = y+H-1;
         shift_y = 0;
     elif y+H >= s1:
-        y_low = y-1;
         y_high = -1;
         #y_arr = nompie.arange(y+r-1,s1)
         #y_arr = y-r2:s;
-        shift_y = y;
+        shift_y = y-W-1;
     else:
         #y_arr = y-r2:y+r2;
         #y_arr = nompie.arange(y-r-1,y+r);
-        y_low = y-1;
         y_high =  y+H-1;
-        shift_y = y; 
+        shift_y = y-W-1; 
     
-    im2 = im[int(y_low):int(y_high),int(x_low):int(x_high)];
+    im2 = im[int(shift_y):int(y_high),int(shift_x):int(x_high)];
     
     shift = [int(shift_x),int(shift_y)]; 
     
