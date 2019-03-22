@@ -268,36 +268,37 @@ def main(exp_str,tracked):
                         pass
 #                        if max(0,j-10) >= 1:
 #                            print("butts")
-#                        for k in range(0,len(pts_new)):
-#                            pts_plot = [];
-#                            negs = [];
-#                            for m in range(max(0,j-10),j+1):
-#                                if k < len(points_all[m]):
-#                                    if points_all[m][k][0] > 0:
-#                                        pts_plot.append(points_all[m][k])
-#                                    elif points_all[m][k][0] == -1:
-#                                        pts_plot.append(points_all[m][k])
-#                                        negs.append(m)
-#
-#                            if len(negs) > 0:
-#                                for m in range(0,len(negs)+1):
-#                                    if m == 0:
-#                                        pts_plot2 = pts_plot[0:negs[m]]
-#                                    elif m == len(negs):
-#                                        pts_plot2 = pts_plot[negs[m-1]+1:]
-#                                    else:
-#                                        pts_plot2 = pts_plot[negs[m-1]+1:negs[m]]
-#                                    if (j > 2 and len(pts_plot2) > 3) or (j <=2 and len(pts_plot2) > 1):
-#                                        for o in range(0,len(pts_plot2)-1):
-#                                            if pts_plot2[o][0] > 0 and pts_plot2[o+1][0] > 0:
-#                                                resume.line(im_path,(int(pts_plot2[o][0]),int(pts_plot2[o][1])),
-#                                                            (int(pts_plot2[o+1][0]),int(pts_plot2[o+1][1])),(255,255,255),2)
-#                            else:                               
-#                                for m in range(0,len(pts_plot)-1):
-#                                    resume.line(im_path,(int(pts_plot[m][0]),int(pts_plot[m][1])),(int(pts_plot[m+1][0]),int(pts_plot[m+1][1])),
-#                                        (255,255,255),2)
-#                        resume.imshow('Path',im_path)    
-#                        resume.waitKey(1)                         
+                        if j%5 == 0:
+                            for k in range(0,len(pts_new)):
+                                pts_plot = [];
+                                negs = [];
+                                for m in range(max(0,j-10),j+1):
+                                    if k < len(points_all[m]):
+                                        if points_all[m][k][0] > 0:
+                                            pts_plot.append(points_all[m][k])
+                                        elif points_all[m][k][0] == -1:
+                                            pts_plot.append(points_all[m][k])
+                                            negs.append(m)
+                            
+                                if len(negs) > 0:
+                                    for m in range(0,len(negs)+1):
+                                        if m == 0:
+                                            pts_plot2 = pts_plot[0:negs[m]]
+                                        elif m == len(negs):
+                                            pts_plot2 = pts_plot[negs[m-1]+1:]
+                                        else:
+                                            pts_plot2 = pts_plot[negs[m-1]+1:negs[m]]
+                                        if (j > 2 and len(pts_plot2) > 3) or (j <=2 and len(pts_plot2) > 1):
+                                            for o in range(0,len(pts_plot2)-1):
+                                                if pts_plot2[o][0] > 0 and pts_plot2[o+1][0] > 0:
+                                                    resume.line(im_path,(int(pts_plot2[o][0]),int(pts_plot2[o][1])),
+                                                                (int(pts_plot2[o+1][0]),int(pts_plot2[o+1][1])),(255,255,255),2)
+                                else:                               
+                                    for m in range(0,len(pts_plot)-1):
+                                        resume.line(im_path,(int(pts_plot[m][0]),int(pts_plot[m][1])),(int(pts_plot[m+1][0]),int(pts_plot[m+1][1])),
+                                            (255,255,255),2)
+                            resume.imshow('Path',im_path)    
+                            resume.waitKey(1)                         
                 #centres_last = points_all[j]
                 centres_last = [];
                 for k in range(0,len(points_all[j])):
@@ -307,6 +308,10 @@ def main(exp_str,tracked):
                     max_pts_num = len(points_all[j])
                 last = j
             print('File Completed')
+            
+            #Plot paths
+            
+            
             save_file = save_location + file_str2[i] + "paths.xlsx"
             
             wb2 = Workbook()
