@@ -87,7 +87,7 @@ def main(exp_str,tracked):
     i = 1;
     
     dist_th = 40
-    move_th = 75
+    move_th = 50
     
     runlist = expt['tracking(' + str(tracked) + ').runlist']
     
@@ -137,7 +137,9 @@ def main(exp_str,tracked):
             
             centres_last = [];
             
-            points_all = []
+            points_all = [];
+            
+            pts_diff = [];
             
             frames = [];
             x_ROI = [];
@@ -166,6 +168,9 @@ def main(exp_str,tracked):
             #print(particle_locations)
             
             for j in range(0,file_num[i]):
+                
+                if j == 445:
+                    print('Butts')
                 
                 if j > 0:
                     im = load_file(file,j+1)
@@ -209,9 +214,27 @@ def main(exp_str,tracked):
                         points_all.append(centres)                  
                     else:
                         pass
-                else:
+                else:    
+                    
+                    if len(pts_diff) < 1:
+                        for k in range(0,len(centres_last)):
+                            pts_diff.append([0,0])
+                    
+                    centres_last2 = centres_last;
+                    
+                    for k in range(0,len(centres_last)):
+                        centres_last2[k][0] = centres_last[k][0] + 0.5*pts_diff[k][0]
+                        centres_last2[k][1] = centres_last[k][1] + 0.5*pts_diff[k][1]
+                        
                     #Particle Linking 
-                    mat = make_linking_mat(centres_last,centres,move_th)   
+                    if j < 2:              
+                        mat = make_linking_mat(centres_last2,centres,move_th) 
+                    else:
+                        pts_gone = []
+                        for k in range(0,len(points_all[j-2])):
+                            if points_all[j-2][k][0] < 0:
+                                pts_gone.append(points_all[j-2][k])                        
+                        mat = make_linking_mat2(centres_last2,centres,move_th,pts_gone) 
                     row,col = sciopt.linear_sum_assignment(mat)   
     
                     #print(row)
@@ -264,15 +287,17 @@ def main(exp_str,tracked):
                     resume.imshow('Path',im_path)    
                     resume.waitKey(1)                 
                     points_all.append(pts_new)    
+                    
                     if j > 0:
                         pass
 #                        if max(0,j-10) >= 1:
 #                            print("butts")
-                        if j%5 == 0:
+                        #if j%5 == 0:
+                        if 1:
                             for k in range(0,len(pts_new)):
                                 pts_plot = [];
                                 negs = [];
-                                for m in range(max(0,j-10),j+1):
+                                for m in range(max(0,j-20),j+1):
                                     if k < len(points_all[m]):
                                         if points_all[m][k][0] > 0:
                                             pts_plot.append(points_all[m][k])
@@ -301,9 +326,19 @@ def main(exp_str,tracked):
                             resume.waitKey(1)                         
                 #centres_last = points_all[j]
                 centres_last = [];
+                pts_diff = [];
                 for k in range(0,len(points_all[j])):
                     if points_all[j][k][0] > 0:
                         centres_last.append(points_all[j][k])
+                        if j > 0 and k < min(len(points_all[j]),len(points_all[j-1])):
+                            if points_all[j-1][k][0] > 0:
+                                pts_diff.append([points_all[j][k][0]-points_all[j-1][k][0],points_all[j][k][1]-points_all[j-1][k][1]])
+                            else:
+                                pts_diff.append([0,0])  
+                        else:
+                            pts_diff.append([0,0]) 
+                if (len(centres_last) != len(pts_diff)) and j > 0:
+                    print('FUck')
                 if len(points_all[j]) > max_pts_num:
                     max_pts_num = len(points_all[j])
                 last = j

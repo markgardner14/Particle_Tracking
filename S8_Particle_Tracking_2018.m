@@ -108,6 +108,11 @@ else
     
     inds = zeros(1,numel(expt.tracking(tracked).runlist));
     
+    try
+        expt.tracking(tracked).multiple_images;
+    catch
+        expt.tracking(tracked).multiple_images = false;
+    end
     %if exist(expt.tracking(tracked).time_file,'file') > 0
     try
         load(expt.tracking(tracked).time_file,'times')
@@ -181,17 +186,18 @@ while m <= length(expt.tracking(tracked).runlist)
             
             try
                 frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
-                if tracked == 3
-                   df_frames = diff(times(expt.rand_order(m)).t2(frames));
-                   md_pt = min(df_frames) * 2;% + (range(df_frames))/2;
-                   frames(df_frames > md_pt) = [];
-                   lows = find(diff(times(expt.rand_order(m)).t2(frames)) < md_pt);
-                   highs = find(diff(times(expt.rand_order(m)).t2(frames)) > md_pt);
-                   if numel(lows) > 1.5*numel(highs)
-                       df_frames = diff(times(expt.rand_order(m)).t2(frames));
-                       dels = find(df_frames > md_pt) + 1;
-                       frames(dels) = [];
-                   end
+                if expt.tracking(tracked).multiple_images && numel(frames) > 1
+                    frames = get_non_blurry_images(frames,times(expt.rand_order(m)).t2(frames),basepath,expt,tracked,m);
+%                    df_frames = diff(times(expt.rand_order(m)).t2(frames));
+%                    md_pt = min(df_frames) * 2;% + (range(df_frames))/2;
+%                    frames(df_frames > md_pt) = [];
+%                    lows = find(diff(times(expt.rand_order(m)).t2(frames)) < md_pt);
+%                    highs = find(diff(times(expt.rand_order(m)).t2(frames)) > md_pt);
+%                    if numel(lows) > 1.5*numel(highs)
+%                        df_frames = diff(times(expt.rand_order(m)).t2(frames));
+%                        dels = find(df_frames > md_pt) + 1;
+%                        frames(dels) = [];
+%                    end
                 end
             catch
                disp('Error') 

@@ -34,6 +34,43 @@ def make_linking_mat(pts1,pts2,th):
                 mat[i+len(pts1)][j] = 10000
                 
     return mat
+
+def make_linking_mat2(pts1,pts2,th,gone_pts):
+    #linking mat that includes previously deleted points - gone_pts
+    s = len(pts1) + len(pts2)
+    
+    mat = nompie.ones((s,s))
+    
+    for i in range(0,len(pts1)):
+        for j in range(0,len(pts2)):
+            mat[i][j] = maths.sqrt((pts1[i][0] - pts2[j][0])**2 + (pts1[i][1] - pts2[j][1])**2)
+        for j in range(0,len(pts1)):
+            if i == j:
+                mat[i][j+len(pts2)] = th
+            else:
+                mat[i][j+len(pts2)] = 10000
+
+
+    for i in range(0,len(pts2)):
+        for j in range(0,len(pts2)):
+            if i == j:
+                mat[i+len(pts1)][j] = th
+            elif i+1 == j:
+                if len(gone_pts) > 0:
+                    min_pts = 10000
+                    for k in range(0,len(gone_pts)):
+                        dist = maths.sqrt((pts2[i][0] - gone_pts[k][0])**2 + (pts2[i][0] - gone_pts[k][0])**2)
+                        min_pts = min(min_pts,dist)
+                    if i+1 == len(pts2):
+                        mat[i+len(pts1)][1] = min_pts
+                    else:
+                        mat[i+len(pts1)][j] = min_pts
+                else:
+                    mat[i+len(pts1)][j] = 10000
+            else:
+                mat[i+len(pts1)][j] = 10000
+                
+    return mat
                 
 def plot_crosses(im,pts,W):
     W = int(W)

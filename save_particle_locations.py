@@ -34,6 +34,21 @@ def load_file(path,n):
          
     return im
 
+def load_file2(path,n):
+    
+    if n < 10:
+        f = '00' + str(n)
+    elif n < 100:
+        f = '0' + str(n)
+    else:
+        f = '' + str(n)
+        
+    path2 = path + f + '.jpg'
+        
+    im = resume.imread(path2,0)      #0 means it will load in greyscale     
+         
+    return im
+
 def main(particle_file,tracked):
     # mouse callback function
     def draw_circle(event,x,y,flags,param):
@@ -73,7 +88,9 @@ def main(particle_file,tracked):
     
     #wb = load_workbook(save_folder + 'test_particles20' + particle_file + '.xlsx')       #File for saving particles location to
 
-    p_thresh = 300
+    #p_thresh = 300
+
+    p_thresh = 200
 
     run_list_str = 'tracking(' + str(tracked) + ').runlist'
 
@@ -101,6 +118,7 @@ def main(particle_file,tracked):
         n = random.randrange(ws_file['D' + str(int(expt[run_list_str][f]))].value)
         
         im = load_file(path,n)
+        #im = load_file2(path,n)
         
         im_original = im.copy()
         
@@ -162,4 +180,4 @@ def main(particle_file,tracked):
                 particle_num = 0
         
         
-main('18A',2)
+main('18B',1)
