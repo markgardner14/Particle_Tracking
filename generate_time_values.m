@@ -3,9 +3,9 @@ function generate_time_values
 %accessed by the file S8_Particle_Tracking_2018.m
 
 
-    base = 'I:/SPring-8/2018 B/Images/FD Corrected/';
+    base = 'I:/SPring-8/2017 B/Images/FD Corrected/';
 
-    exp_name = 'S8_18B_XU';
+    exp_name = 'S8_17B_XU';
     
     %run('exp_list/S8_17A_XU.m')
     run(['exp_list/', exp_name,'.m'])
@@ -48,12 +48,21 @@ function generate_time_values
            times(k).ind = i+expt.tracking.runlist(1) - 1;
            
            for j = 1:frame_nums(i)
+%                if j < 10
+%                    f = strcat('000',num2str(j));
+%                elseif j < 100
+%                    f = strcat('00',num2str(j));
+%                elseif j < 1000
+%                    f = strcat('0',num2str(j));
+%                else
+%                    f = num2str(j);
+%                end
                if j < 10
-                   f = strcat('000',num2str(j));
-               elseif j < 100
                    f = strcat('00',num2str(j));
-               elseif j < 1000
+               elseif j < 100
                    f = strcat('0',num2str(j));
+               elseif j < 1000
+                   f = strcat('',num2str(j));
                else
                    f = num2str(j);
                end

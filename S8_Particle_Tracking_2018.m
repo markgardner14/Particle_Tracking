@@ -79,7 +79,7 @@ switch button
         complete = false;
         
         datetime = datestr(now,'yyyy-mmm-dd HH-MM-SS');
-        initials = inputdlg('Please enter your initials (i.e. MD)','User ID');
+        initials = inputdlg('Please enter your initials (e.g. MD)','User ID');
         file = ['MCT ',datetime,' ',char(initials)];
         MAT = [basepath,expt.tracking(tracked).MCT,file,'.mat'];
         XLS = [basepath,expt.tracking(tracked).MCT,file,'.xls'];
@@ -123,8 +123,8 @@ else
         catch
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             %load('exp_list/S8_18A_XU_times','times')                %Location of data file of times for different images. Change as appropriate
-            %load('exp_list/S8_17B_XU_times','times')  
-            load('exp_list/S8_17A_XU_times','times')  
+            load('exp_list/S8_17B_XU_times','times')  
+            %load('exp_list/S8_17A_XU_times','times')  
             %load([pathname,filename(1:end-2),'_times'],'times')
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         end
