@@ -171,7 +171,22 @@ def load_file(path,n):
          
     return im
     
-def main(particle_file):
+def load_file2(path,n):
+    
+    if n < 10:
+        f = '00' + str(n)
+    elif n < 100:
+        f = '0' + str(n)
+    else:
+        f = '' + str(n)
+        
+    path2 = path + f + '.jpg'
+        
+    im = resume.imread(path2,0)      #0 means it will load in greyscale     
+         
+    return im
+
+def main(particle_file,tracked):
     
         # mouse callback function
     def draw_circle(event,x,y,flags,param):
@@ -195,6 +210,8 @@ def main(particle_file):
  
     #base = "I://SPring-8/2018 B/Images/FD Corrected/";
     
+    base = "I://SPring-8/20" + particle_file[0:2] + " " + particle_file[-1]+ "/Images/FD Corrected/";
+    
     base2 = "H://Matlab/exp_list/"
     
     save_folder = 'H://Matlab/particle_recognition/'
@@ -214,16 +231,17 @@ def main(particle_file):
     f = 0
 
     #for f in range(0,len(expt['tracking(3).runlist'])):
-    while f < len(expt['tracking(3).runlist']):
+    while f < len(expt['tracking('+str(tracked)+').runlist']):
 
-        path = base + ws_file['A' + str(int(expt['tracking(3).runlist'][f]))].value + 'Low/' + ws_file['B' + str(int(expt['tracking(3).runlist'][f]))].value + 'fad_'
+        path = base + ws_file['A' + str(int(expt['tracking('+str(tracked)+').runlist'][f]))].value + 'Low/' + ws_file['B' + str(int(expt['tracking('+str(tracked)+').runlist'][f]))].value + 'fad_'
         
-        n = random.randrange(ws_file['D' + str(int(expt['tracking(3).runlist'][f]))].value)
+        n = random.randrange(ws_file['D' + str(int(expt['tracking('+str(tracked)+').runlist'][f]))].value)
         
         print(path)
         print(str(n))
         
-        im = load_file(path,n)
+        #im = load_file(path,n)
+        im = load_file2(path,n)
         
         im_original = im.copy()
         
@@ -281,8 +299,8 @@ def main(particle_file):
                 ws.cell(row = i+1,column = 3,value = rad[i])
                 
             #Save results to excel
-            wb.save(save_folder + 'test_particles20' + particle_file)
+            wb.save(save_folder + 'test_particles20' + particle_file + '.xlsx')
             f = f + 1
             
 #main("H://Matlab/particle_recognition/test_particles2018B.xlsx")
-main('18B')            
+main('17B',1)            

@@ -1,4 +1,4 @@
-function[centers,radii] = smooth_circle_detector2(im,ax,rmin,rmax,sensitivity)
+function[centers,radii,detectedImg] = smooth_circle_detector2(im,ax,rmin,rmax,sensitivity)
 %Algorithm for detecting particles using gaussian smoothing and a Circular
 %Hough Transform
 %Input
@@ -26,6 +26,10 @@ function[centers,radii] = smooth_circle_detector2(im,ax,rmin,rmax,sensitivity)
 
     [centers, radii] = imfindcircles(im2,[rmin rmax],'ObjectPolarity','bright','Sensitivity',sensitivity);      %Find particles using CHT. 
 
-    viscircles(ax,centers, radii,'Color','r');
-
+    %viscircles(ax,centers, radii,'Color','r');
+    
+    detectedImg = insertShape(im2,'Circle',[centers radii],'Color','red','LineWidth',2);
+    
+    imshow(detectedImg,'parent',ax)
+    
 end

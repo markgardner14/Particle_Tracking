@@ -121,27 +121,12 @@ else
         try
             load(expt.file.time_file,'times')
         catch
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            %load('exp_list/S8_18A_XU_times','times')                %Location of data file of times for different images. Change as appropriate
-            load('exp_list/S8_17B_XU_times','times')  
-            %load('exp_list/S8_17A_XU_times','times')  
-            %load([pathname,filename(1:end-2),'_times'],'times')
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            disp('Time file not found. Run file generate_time_values.m and save as expt.file.time_file in expt file')
+            return
+
         end
     end
-    try
-        times(1).ind;
-        for a = 1:numel(expt.tracking(tracked).runlist)
-            for n = 1:numel(inds)
-                if expt.tracking(tracked).runlist(a) == times(n).ind
-                    inds(a) = n;
-                end
-            end
-        end
-    catch
-       inds = expt.tracking(tracked).runlist;
-    end
-    %m = 1;
+
 end
 
 
@@ -162,14 +147,15 @@ while m <= length(expt.tracking(tracked).runlist)
         
     if ~fixed_Fs
         
-        if inds(m) == 0
+        if expt.tracking(tracked).runlist(m) == 0
            m = m+1;
            continue
         end        
         if tracked == 3
             end_times = start_times + expt.tracking(tracked).frames;
         else
-            end_times =  start_times + expt.tracking(tracked).frames*median(diff(times(expt.rand_order(m)).t0));
+            %end_times =  start_times + expt.tracking(tracked).frames*median(diff(times(expt.rand_order(m)).t0));
+            end_times =  start_times + expt.tracking(tracked).frames*median(diff(times(expt.tracking(tracked).runlist(m)).t0));
         end
     end
     
@@ -185,9 +171,10 @@ while m <= length(expt.tracking(tracked).runlist)
             end            
             
             try
-                frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+                %frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+                frames = find(times(expt.tracking(tracked).runlist(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.tracking(tracked).runlist(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
                 if expt.tracking(tracked).multiple_images && numel(frames) > 1
-                    frames = get_non_blurry_images(frames,times(expt.rand_order(m)).t2(frames),basepath,expt,tracked,m);
+                    frames = get_non_blurry_images(frames,times(expt.tracking(tracked).runlist(m)).t2(frames),basepath,expt,tracked,m);
 %                    df_frames = diff(times(expt.rand_order(m)).t2(frames));
 %                    md_pt = min(df_frames) * 2;% + (range(df_frames))/2;
 %                    frames(df_frames > md_pt) = [];
