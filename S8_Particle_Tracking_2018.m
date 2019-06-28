@@ -224,7 +224,12 @@ while m <= length(expt.tracking(tracked).runlist)
             if exist(imagename),
                 %disp(['Loading image ', num2str(i), ' of ', num2str(expt.tracking(tracked).frames)]);
                 disp(['Loading image ', num2str(i), ' of ', num2str(f)]);
-                [images(:,:,i),acquired(i)] = ReadFileTime(imagename);
+                [images(:,:,i),acquired_temp] = ReadFileTime(imagename);
+                if ~isempty(acquired_temp)
+                    acquired(i) = acquired_temp;   
+                else
+                    acquired(i) = i;
+                end                
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%uncomment above%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%line%%%%%%%%%%%%%%%%%%%%
                 %[images(:,:,i)] = ReadFileTime(imagename);
                 %acquired(i) = framenumber(i)*expt.tracking(1).frameinterval;
