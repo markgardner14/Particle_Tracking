@@ -169,12 +169,20 @@ while m <= length(expt.tracking(tracked).runlist)
                 t = t+1;
                 continue
             end            
-            
             try
-                %frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
-                frames = find(times(expt.tracking(tracked).runlist(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.tracking(tracked).runlist(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+                try
+                    t_frames = times(expt.tracking(tracked).runlist(m)).t2;
+                    %frames = find(times(expt.tracking(tracked).runlist(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.tracking(tracked).runlist(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+                    %frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+                catch
+                    t_frames = times(expt.rand_order(m)).t2;
+                    %frames = find(times(expt.rand_order(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.rand_order(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
+                end
+                frames = find(t_frames >= start_times(expt.tracking(tracked).blocks(t)) & t_frames < end_times(expt.tracking(tracked).blocks(t)));
+
+                %frames = find(times(expt.tracking(tracked).runlist(m)).t2 >= start_times(expt.tracking(tracked).blocks(t)) & times(expt.tracking(tracked).runlist(m)).t2 < end_times(expt.tracking(tracked).blocks(t)));
                 if expt.tracking(tracked).multiple_images && numel(frames) > 1
-                    frames = get_non_blurry_images(frames,times(expt.tracking(tracked).runlist(m)).t2(frames),basepath,expt,tracked,m);
+                    frames = get_non_blurry_images(frames,t_frames(frames),basepath,expt,tracked,m);
 %                    df_frames = diff(times(expt.rand_order(m)).t2(frames));
 %                    md_pt = min(df_frames) * 2;% + (range(df_frames))/2;
 %                    frames(df_frames > md_pt) = [];
